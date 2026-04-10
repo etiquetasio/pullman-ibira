@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>PULLMAN IBIRAPUERA - PRATOS & ALERGÊNICOS</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    img {
+      width: 180px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 20px;
+      margin-bottom: 30px;
+      max-width: 600px;
+    }
+
+    button {
+      padding: 15px 25px;
+      margin: 10px;
+      font-size: 14px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: white;
+      transition: 0.3s;
+      min-width: 260px;
+    }
+
+    button:disabled {
+      background-color: #999;
+      cursor: not-allowed;
+    }
+
+    button:hover:not(:disabled) {
+      background-color: #0056b3;
+    }
+
+    #status {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Logo Pullman -->
+  <img 
+    src="https://i.pinimg.com/736x/a1/c8/35/a1c8357b0a6f54e1325a4323ec9c874e.jpg" 
+    alt="Pullman Logo"
+  >
+
+  <h1>PULLMAN IBIRAPUERA - PRATOS & ALERGÊNICOS PARA ETIQUETAS ELETRÔNICAS</h1>
+
+  <button id="btnPratos" onclick="atualizarPratos()">
+    SINCRONIZAR PRATOS
+  </button>
+
+  <button id="btnAlergenicos" onclick="atualizarAlergenicos()">
+    SINCRONIZAR ALERGÊNICOS
+  </button>
+
+  <div id="status"></div>
+
+  <script>
+    const statusDiv = document.getElementById("status");
+    const btnPratos = document.getElementById("btnPratos");
+    const btnAlergenicos = document.getElementById("btnAlergenicos");
+
+    async function chamarEndpoint(url, nome) {
+      statusDiv.innerText = `Executando ${nome}...`;
+
+      btnPratos.disabled = true;
+      btnAlergenicos.disabled = true;
+
+      try {
+        const response = await fetch(url, { method: 'GET' });
+
+        if (response.status === 200) {
+          statusDiv.innerText = `✅ ${nome} executado com sucesso (200 OK)`;
+        } else {
+          statusDiv.innerText = `⚠️ ${nome} retornou status ${response.status}`;
+        }
+
+      } catch (error) {
+        statusDiv.innerText = `❌ Erro ao executar ${nome}: ${error.message}`;
+      } finally {
+        btnPratos.disabled = false;
+        btnAlergenicos.disabled = false;
+      }
+    }
+
+    function atualizarPratos() {
+      chamarEndpoint(
+        "https://n8n-railway.etiquetas.io/webhook/pullman-ibira-pratos",
+        "Sincronização de Pratos"
+      );
+    }
+
+    function atualizarAlergenicos() {
+      chamarEndpoint(
+        "https://n8n-railway.etiquetas.io/webhook/pullman-ibira-alergenicos",
+        "Sincronização de Alergênicos"
+      );
+    }
+  </script>
+
+</body>
+</html>
