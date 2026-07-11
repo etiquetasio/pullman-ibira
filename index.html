@@ -1,161 +1,110 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>PULLMAN IBIRAPUERA - PRATOS & ALERGÊNICOS</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f6f8;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      text-align: center;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    img {
-      width: 180px;
-      margin-bottom: 20px;
-    }
+    <title>Novo Sistema - Etiquetas.io</title>
 
-    h1 {
-      font-size: 20px;
-      margin-bottom: 30px;
-      max-width: 600px;
-    }
-
-    button {
-      padding: 15px 25px;
-      margin: 10px;
-      font-size: 14px;
-      font-weight: bold;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      background-color: #007bff;
-      color: white;
-      transition: 0.3s;
-      min-width: 260px;
-    }
-
-    button:disabled {
-      background-color: #999;
-      cursor: not-allowed;
-    }
-
-    button:hover:not(:disabled) {
-      background-color: #0056b3;
-    }
-
-    #btnTudoLivre {
-      background-color: #dc3545;
-    }
-
-    #btnTudoLivre:hover:not(:disabled) {
-      background-color: #a71d2a;
-    }
-
-    #status {
-      margin-top: 20px;
-      font-weight: bold;
-    }
-  </style>
-</head>
-<body>
-
-  <!-- Logo Pullman -->
-  <img 
-    src="https://i.pinimg.com/736x/a1/c8/35/a1c8357b0a6f54e1325a4323ec9c874e.jpg" 
-    alt="Pullman Logo"
-  >
-
-  <h1>PULLMAN IBIRAPUERA - PRATOS & ALERGÊNICOS PARA ETIQUETAS ELETRÔNICAS</h1>
-
-  <button id="btnPratos" onclick="atualizarPratos()">
-    SINCRONIZAR PRATOS
-  </button>
-
-  <button id="btnAlergenicos" onclick="atualizarAlergenicos()">
-    SINCRONIZAR ALERGÊNICOS
-  </button>
-
-  <button id="btnTudoLivre" onclick="colocarTudoLivre()">
-    COLOCAR TUDO EM LIVRE
-  </button>
-
-  <div id="status"></div>
-
-  <script>
-    const statusDiv = document.getElementById("status");
-    const btnPratos = document.getElementById("btnPratos");
-    const btnAlergenicos = document.getElementById("btnAlergenicos");
-    const btnTudoLivre = document.getElementById("btnTudoLivre");
-
-    function desabilitarBotoes() {
-      btnPratos.disabled = true;
-      btnAlergenicos.disabled = true;
-      btnTudoLivre.disabled = true;
-    }
-
-    function habilitarBotoes() {
-      btnPratos.disabled = false;
-      btnAlergenicos.disabled = false;
-      btnTudoLivre.disabled = false;
-    }
-
-    async function chamarEndpoint(url, nome) {
-      statusDiv.innerText = `Executando ${nome}...`;
-
-      desabilitarBotoes();
-
-      try {
-        const response = await fetch(url, { method: 'GET' });
-
-        if (response.status === 200) {
-          statusDiv.innerText = `✅ ${nome} executado com sucesso (200 OK)`;
-        } else {
-          statusDiv.innerText = `⚠️ ${nome} retornou status ${response.status}`;
+    <style>
+        * {
+            box-sizing: border-box;
         }
 
-      } catch (error) {
-        statusDiv.innerText = `❌ Erro ao executar ${nome}: ${error.message}`;
-      } finally {
-        habilitarBotoes();
-      }
-    }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
 
-    function atualizarPratos() {
-      chamarEndpoint(
-        "https://n8n-railway.etiquetas.io/webhook/pullman-ibira-pratos",
-        "Sincronização de Pratos"
-      );
-    }
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f2f2f2;
+            color: #222222;
+        }
 
-    function atualizarAlergenicos() {
-      chamarEndpoint(
-        "https://n8n-railway.etiquetas.io/webhook/pullman-ibira-alergenicos",
-        "Sincronização de Alergênicos"
-      );
-    }
+        .container {
+            width: 100%;
+            max-width: 720px;
+            padding: 48px 40px;
 
-    function colocarTudoLivre() {
-      const confirmado = confirm(
-        "Tem certeza que deseja colocar tudo em LIVRE?"
-      );
+            text-align: center;
+            background: #ffffff;
+            border-radius: 18px;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+        }
 
-      if (!confirmado) {
-        statusDiv.innerText = "Operação cancelada pelo usuário.";
-        return;
-      }
+        .alerta {
+            margin: 0 0 36px;
+            font-size: 25px;
+            line-height: 1.5;
+            font-weight: 600;
+        }
 
-      chamarEndpoint(
-        "https://n8n-railway.etiquetas.io/webhook/ibira-tudo-livre",
-        "Colocar Tudo em Livre"
-      );
-    }
-  </script>
+        .botao {
+            display: inline-block;
+            width: 100%;
+            max-width: 430px;
+            padding: 22px 30px;
+
+            font-size: 23px;
+            font-weight: bold;
+            text-decoration: none;
+            text-transform: uppercase;
+
+            color: #ffffff;
+            background: #d71920;
+            border-radius: 12px;
+
+            transition:
+                transform 0.2s ease,
+                background 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .botao:hover {
+            background: #b8141a;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(215, 25, 32, 0.3);
+        }
+
+        .botao:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 36px 24px;
+            }
+
+            .alerta {
+                font-size: 21px;
+            }
+
+            .botao {
+                font-size: 19px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="container">
+        <p class="alerta">
+            Atenção Operador das etiquetas, o Airtable e os botões de sincronia
+            foram descontinuados, por favor, acesse o novo sistema com o seu
+            usuário no botão abaixo. Obrigado.
+        </p>
+
+        <a
+            class="botao"
+            href="https://buffet.etiquetas.io"
+        >
+            Acessar o novo sistema
+        </a>
+    </main>
 
 </body>
 </html>
